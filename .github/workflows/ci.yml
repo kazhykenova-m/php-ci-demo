@@ -11,3 +11,18 @@ jobs:
       - run: composer install --no-interaction --prefer-dist
       - run: vendor/bin/phpstan analyse src --level=6
       - run: vendor/bin/phpunit tests --bootstrap vendor/autoload.php
+    build:
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+      - run: composer install --no-dev --optimize-autoloader --no-interaction
+      - run: zip -r release.zip src vendor composer.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release
+          path: release.zip
