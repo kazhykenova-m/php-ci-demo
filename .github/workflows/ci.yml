@@ -11,7 +11,8 @@ jobs:
       - run: composer install --no-interaction --prefer-dist
       - run: vendor/bin/phpstan analyse src --level=6
       - run: vendor/bin/phpunit tests --bootstrap vendor/autoload.php
-    build:
+
+  build:
     needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
